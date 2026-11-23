@@ -88,7 +88,7 @@ public class BigramModel {
         if(line.trim().isEmpty()){
             continue;
         }   
-        String[] tokens = line.split("\\s+");
+        String[] tokens = line.trim().split("\\s+");
         for (int i=0;i < tokens.length;i++){
             String W=normalizeWord(tokens[i]);
             if (W != null && count < MAX_VOCABULARY_SIZE && findIndex(vocabulary, W) == ELEMENT_NOT_FOUND){
@@ -111,8 +111,26 @@ public class BigramModel {
      * @post: mBigramCounts = prev(mBigramCounts)
      */
     public int[][] buildCountsArray(String fileName, String[] vocabulary) throws IOException { // Question 2
-        // TODO: implement
-        return null;
+        int[][] counts = new int[vocabulary.length][vocabulary.length];
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        String line;
+        while ((line =reader.readLine()) != null){
+            int previndex = ELEMENT_NOT_FOUND;
+            if (line.trim().isEmpty()){
+                continue;
+            }
+            String[] tokens = line.trim().split("\\s+");
+            for (int i=0 ;i < tokens.length; i++){
+                String W = normalizeWord(tokens[i]);
+                int currentindex = findIndex(vocabulary, W);
+                if (previndex != ELEMENT_NOT_FOUND && currentindex != ELEMENT_NOT_FOUND){
+                    counts[previndex][currentindex]++;
+                }
+                previndex = currentindex;
+            }
+            }
+        reader.close();
+        return counts;
     }
 
     /*
