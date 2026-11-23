@@ -199,10 +199,23 @@ public class BigramModel {
      * @post: if sentence is probable, according to the model, $ret = true, else, $ret = false
      */
     public boolean isLegalSentence(String sentence) { // Question 5
-        // TODO: implement
-        return false;
+    if (sentence.isEmpty()){
+        return true;
+    } 
+    String[] words = sentence.split(" ");
+    int prevIndex = findIndex(mVocabulary, words[0]);
+    if (prevIndex == ELEMENT_NOT_FOUND){
+            return false;
     }
-
+    for( int i=1; i<words.length; i++){
+        int currentIndex = findIndex(mVocabulary, words[i]);
+           if(currentIndex == ELEMENT_NOT_FOUND || mBigramCounts[prevIndex][currentIndex] == 0) { 
+            return false;
+        }
+        prevIndex = currentIndex;
+    }
+    return true;
+    }
     ///////////////////////////////////////////////////////////////////////////
     // Queries on the model - already implemented for you.
     // They start working once Questions 1 - 2 are done.
